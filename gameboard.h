@@ -6,14 +6,33 @@
 class GameBoard : public QAbstractListModel
 {
     Q_OBJECT
+    Q_PROPERTY(int m_sideSize READ sideSize CONSTANT)
+    Q_PROPERTY(int m_cellNum READ cellNum CONSTANT)
+
 public:
     static constexpr int defBoardSideSize = 4;
+    using Position = std::pair<int, int>;
+
     GameBoard(int sideSize = defBoardSideSize, QObject* parrent = nullptr);
+
+    int rowCount(const QModelIndex& parent = QModelIndex {}) const override;
+
+    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
+
+    int sideSize() const;
+
+    int cellNum() const;
+
+    Q_INVOKABLE bool move(int index);
 
 private:
     void Shuffle();
+    bool isPositionValid(const int cellIndex) const;
+    bool isBoardValid() const;
+    Position getRowCol(int index) const;
 
     class Cell{
+
     public:
         int value;
 

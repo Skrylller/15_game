@@ -4,6 +4,7 @@ Rectangle {
     id: _root
 
     property string displayText: ""
+    readonly property int defTextSize: 24
     readonly property alias internalText: _numText
 
     color: "lightgreen"
