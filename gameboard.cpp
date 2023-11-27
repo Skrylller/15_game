@@ -4,10 +4,18 @@
 
 namespace
 {
+///
+/// \brief Проверка находится ли позиция рядом с пустой ячейкой.
+/// \param f - первая позиция
+/// \param s - вторая позиция
+/// \return
+///
 bool isAdjacent(const GameBoard::Position f, const GameBoard::Position s){
     if(f == s){
         return false;
     }
+
+    // Считает дистанцию между двумя значениями.
     const auto calcDistance = [](const int pos1, int pos2){
         int distance = pos1;
         distance -= pos2;
@@ -17,18 +25,21 @@ bool isAdjacent(const GameBoard::Position f, const GameBoard::Position s){
 
     bool result = false;
 
+    //Проверка дистанции по горизонтали.
     if (f.first == s.first) {
         int distance = calcDistance(f.second, s.second);
         if(distance == 1){
             result = true;
         }
     }
+    //Проверка дистанции по вертикали.
     else if (f.second == s.second){
         int distance = calcDistance(f.first, s.first);
         if (distance == 1){
             result = true;
         }
     }
+
     return result;
 }
 }
@@ -42,12 +53,23 @@ GameBoard::GameBoard(int sideSize, QObject* parrent) : QAbstractListModel(parren
     Shuffle();
 }
 
+///
+/// \brief Размер игрового поля (кол-во ячеек)
+/// \param parent
+/// \return
+///
 int GameBoard::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
     return m_cells.size();
 }
 
+///
+/// \brief Возвращает значение из Vector клеток по индексу index
+/// \param index
+/// \param role
+/// \return
+///
 QVariant GameBoard::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid() || role != Qt::DisplayRole)
@@ -65,6 +87,9 @@ QVariant GameBoard::data(const QModelIndex &index, int role) const
     return QVariant::fromValue(m_cells.at(cellIndex).value);
 }
 
+///
+/// \brief Перемешивает клетки
+///
 void GameBoard::Shuffle()
 {
     static auto seed = std::chrono::system_clock::now().time_since_epoch().count();
@@ -76,11 +101,20 @@ void GameBoard::Shuffle()
     } while (isBoardValid());
 }
 
+///
+/// \brief Проверяет входит ли индекс в размер контейнера клеток
+/// \param cellIndex
+/// \return
+///
 bool GameBoard::isPositionValid(const int cellIndex) const
 {
     return cellIndex < m_cellNum;
 }
 
+///
+/// \brief Проверяет является ли поле проходимым (работает некорректно)
+/// \return
+///
 bool GameBoard::isBoardValid() const
 {
     int inv = 0;
