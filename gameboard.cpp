@@ -1,6 +1,7 @@
 #include "gameboard.h"
 #include <algorithm>
 #include <random>
+#include <cmath>
 
 namespace
 {
@@ -23,24 +24,22 @@ bool isAdjacent(const GameBoard::Position f, const GameBoard::Position s){
         return distance;
     };
 
-    bool result = false;
-
     //Проверка дистанции по горизонтали.
     if (f.first == s.first) {
         int distance = calcDistance(f.second, s.second);
         if(distance == 1){
-            result = true;
+            return true;
         }
     }
     //Проверка дистанции по вертикали.
     else if (f.second == s.second){
         int distance = calcDistance(f.first, s.first);
         if (distance == 1){
-            result = true;
+            return true;
         }
     }
 
-    return result;
+    return false;
 }
 }
 
@@ -53,23 +52,12 @@ GameBoard::GameBoard(int sideSize, QObject* parrent) : QAbstractListModel(parren
     Shuffle();
 }
 
-///
-/// \brief Размер игрового поля (кол-во ячеек)
-/// \param parent
-/// \return
-///
 int GameBoard::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
     return m_cells.size();
 }
 
-///
-/// \brief Возвращает значение из Vector клеток по индексу index
-/// \param index
-/// \param role
-/// \return
-///
 QVariant GameBoard::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid() || role != Qt::DisplayRole)
@@ -87,9 +75,6 @@ QVariant GameBoard::data(const QModelIndex &index, int role) const
     return QVariant::fromValue(m_cells.at(cellIndex).value);
 }
 
-///
-/// \brief Перемешивает клетки
-///
 void GameBoard::Shuffle()
 {
     static auto seed = std::chrono::system_clock::now().time_since_epoch().count();
@@ -101,20 +86,11 @@ void GameBoard::Shuffle()
     } while (isBoardValid());
 }
 
-///
-/// \brief Проверяет входит ли индекс в размер контейнера клеток
-/// \param cellIndex
-/// \return
-///
 bool GameBoard::isPositionValid(const int cellIndex) const
 {
     return cellIndex < m_cellNum;
 }
 
-///
-/// \brief Проверяет является ли поле проходимым (работает некорректно)
-/// \return
-///
 bool GameBoard::isBoardValid() const
 {
     int inv = 0;
@@ -142,7 +118,7 @@ bool GameBoard::isBoardValid() const
     return (inv % 2) == 0;
 }
 
-GameBoard::Position GameBoard::getRowCol(int index) const
+GameBoard::Position GameBoard::getPosition(int index) const
 {
     Q_ASSERT(m_sideSize > 0);
     int row = index / m_sideSize;
@@ -156,6 +132,46 @@ int GameBoard::cellNum() const
     return m_cellNum;
 }
 
+int GameBoard::getHorizontalAnimDirection() const
+{
+    return animDirectionH;
+}
+
+void GameBoard::setHorizontalAnimDirection(int value)
+{
+    animDirectionH = value;
+}
+
+int GameBoard::getVerticalAnimDirection() const
+{
+    return animDirectionV;
+}
+
+void GameBoard::setVerticalAnimDirection(int value)
+{
+    animDirectionV = value;
+}
+
+bool GameBoard::IsAnimRun() const
+{
+    return isAnimRun;
+}
+
+void GameBoard::IsAnimRun(bool value)
+{
+    isAnimRun = value;
+}
+
+int GameBoard::SelectedCell() const
+{
+    return selectedCell;
+}
+
+void GameBoard::SelectedCell(int value)
+{
+    selectedCell = value;
+}
+
 bool GameBoard::move(const int index)
 {
     if(!isPositionValid(index))
@@ -163,24 +179,47 @@ bool GameBoard::move(const int index)
         return false;
     }
 
-    const Position elementPosition = getRowCol(index);
+    //элемент на который нажали
+    const Position elementPosition = getPosition(index);
 
+    //итератор последнего элемента
     auto hiddenElementIterator = std::find(m_cells.begin(), m_cells.end(), cellNum());
 
+    //если последний элемент не найден - ошибка с закрытием
     Q_ASSERT(hiddenElementIterator != m_cells.end());
 
-    Position hiddenElementPosition = getRowCol(std::distance(m_cells.begin(), hiddenElementIterator));
+    //позиция посл. элемента
+    Position hiddenElementPosition = getPosition(std::distance(m_cells.begin(), hiddenElementIterator));
 
+    //проверка, что выбранный элемент рядом с последним
     if(!isAdjacent(elementPosition, hiddenElementPosition)){
         return false;
     }
-    std::swap(hiddenElementIterator->value, m_cells[index].value);
-    emit dataChanged(createIndex(0, 0), createIndex(m_cellNum, 0));
+    CalcAnimDirection(elementPosition, hiddenElementPosition);
 
+    //меняетр местами значения элементов
+    std::swap(hiddenElementIterator->value, m_cells[index].value);
+
+    IsAnimRun(true);
+    SelectedCell(hiddenElementIterator->value);
+
+    emit MoveCell();
+    emit dataChanged(createIndex(0, 0), createIndex(m_cellNum, 0));
     return true;
 }
 
 int GameBoard::sideSize() const
 {
     return m_sideSize;
+}
+
+void GameBoard::CalcAnimDirection(const GameBoard::Position f, const GameBoard::Position s){
+    setHorizontalAnimDirection(0);
+    setVerticalAnimDirection(0);
+
+    if (f.first != s.first)
+        setVerticalAnimDirection((f.first - s.first) / abs(f.first - s.first));
+
+    if (f.second != s.second)
+        setHorizontalAnimDirection((f.second - s.second) / abs(f.second - s.second));
 }
