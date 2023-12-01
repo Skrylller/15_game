@@ -15,7 +15,6 @@ GridView {
         id: _backgroundDelegate;
 
         readonly property int defSpacing: 5;
-
         readonly property int animLenght: 200;
 
         width: _root.cellWidth;
@@ -70,24 +69,6 @@ GridView {
                 from: -_root.model.verticalAnimDirection * _backgroundDelegate.height + Math.min(_backgroundDelegate.width, _backgroundDelegate.height) / 100 * 5;
                 to: Math.min(_backgroundDelegate.width, _backgroundDelegate.height) / 100 * 5;
             }
-/*
-            SequentialAnimation{
-                NumberAnimation{
-                    target: _tile;
-                    property: "anchors.margins";
-                    duration: animLenght / 2;
-                    from: Math.min(_backgroundDelegate.width, _backgroundDelegate.height) / 100 * 5;
-                    to: Math.min(_backgroundDelegate.width, _backgroundDelegate.height) / 100 * 3;
-                }
-
-                NumberAnimation{
-                    target: _tile;
-                    property: "anchors.margins";
-                    duration: animLenght / 2;
-                    from: Math.min(_backgroundDelegate.width, _backgroundDelegate.height) / 100 * 3;
-                    to: Math.min(_backgroundDelegate.width, _backgroundDelegate.height) / 100 * 5;
-                }
-            }*/
         }
 
     }

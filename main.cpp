@@ -1,17 +1,21 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include "gameboard.h"
+#include "timer.h"
 
 int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     QGuiApplication app(argc, argv);
+    QQmlApplicationEngine engine;
 
     GameBoard board;
-    qmlRegisterType<GameBoard>("Game", 1, 0, "GameBoardModel");
+    Timer timer {};
 
-    QQmlApplicationEngine engine;
+    qmlRegisterType<GameBoard>("Game", 1, 0, "GameBoardModel");
+    engine.rootContext()->setContextProperty("TimerModel", &timer);
+
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
                      &app, [url](QObject *obj, const QUrl &objUrl) {

@@ -3,5 +3,6 @@
         <file>main.qml</file>
         <file>Tile.qml</file>
         <file>GameBoard.qml</file>
+        <file>TimePanel.qml</file>
     </qresource>
 </RCC>
