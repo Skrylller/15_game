@@ -203,6 +203,11 @@ bool GameBoard::move(const int index)
     IsAnimRun(true);
     SelectedCell(hiddenElementIterator->value);
 
+    for(size_t i = 0; i < moveUpdateObjs.size(); i++)
+    {
+        moveUpdateObjs[i].moveUpdate();
+    }
+
     emit MoveCell();
     emit dataChanged(createIndex(0, 0), createIndex(m_cellNum, 0));
     return true;

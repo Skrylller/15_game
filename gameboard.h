@@ -2,6 +2,8 @@
 #define GAMEBOARD_H
 #include <QAbstractListModel>
 # include <vector>
+#include "gamecontroller.h"
+#include "IMoveUpdate.h"
 
 class GameBoard : public QAbstractListModel
 {
@@ -73,6 +75,8 @@ public:
     /// \return
     ///
     Q_INVOKABLE bool move(int index);
+
+    std::vector<IMoveUpdate> moveUpdateObjs;
 
 private:
 

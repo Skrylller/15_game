@@ -15,6 +15,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         gameboard.cpp \
+        gamecontroller.cpp \
         main.cpp \
         timer.cpp
 
@@ -35,5 +36,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
+    IMoveUpdate.h \
     gameboard.h \
+    gamecontroller.h \
     timer.h

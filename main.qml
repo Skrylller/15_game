@@ -37,8 +37,15 @@ Window {
                 spacing: paddings
 
                 TimePanel{
-
+                    sec: TimerModel.seconds;
+                    min: TimerModel.minutes;
                 }
+
+                Counter{
+                    name: "Количество \nходов";
+                    counter: moveCount;
+                }
+
             }
         }
 

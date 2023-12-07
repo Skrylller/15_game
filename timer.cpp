@@ -3,11 +3,6 @@
 Timer::Timer(time_t startTime, QObject* parrent) : QObject(parrent)
 {
     this->startTime = startTime;
-    SetActiveTimer(true);
-    updateTimer = new QTimer(this);
-    updateTimer->setInterval(1000);
-    connect(updateTimer, SIGNAL(timeout()), this, SLOT(Update()));
-    updateTimer->start();
 }
 
 Timer::Timer(QObject* parrent) : QObject(parrent)
@@ -18,6 +13,13 @@ Timer::Timer(QObject* parrent) : QObject(parrent)
 void Timer::SetActiveTimer(bool isActive)
 {
     this->isActive = isActive;
+    currentTime = CurrentTime();
+
+    if(updateTimer == nullptr){
+        updateTimer = new QTimer(this);
+        updateTimer->start(500);
+        connect(updateTimer, SIGNAL(timeout()), this, SLOT(slotUpdate()));
+    }
 }
 
 bool Timer::IsActive()
@@ -25,14 +27,12 @@ bool Timer::IsActive()
     return isActive;
 }
 
-tm& Timer::GetTm()
+time_t Timer::GetDifTime()
 {
-    time_t time = CurrentTime() - startTime;
-    struct tm *tm_time = localtime(&time);
-    return *tm_time;
+    return  CurrentTime() - startTime;
 }
 
-void Timer::Update()
+void Timer::slotUpdate()
 {
     if(currentTime == CurrentTime())
         return;
@@ -41,14 +41,16 @@ void Timer::Update()
     emit TimerUpdate();
 }
 
-int Timer::GetTimeSeconds()
+QString Timer::GetTimeSeconds()
 {
-    return GetTm().tm_sec;
+    int sec = GetDifTime() % 60;
+    return sec < 10 ? "0" + QString::number(sec) : QString::number(sec);
 }
 
-int Timer::GetTimeMinutes()
+QString Timer::GetTimeMinutes()
 {
-    return GetTm().tm_min + GetTm().tm_hour * 100;
+    int min = GetDifTime() / 60;
+    return min < 10 ? "0" + QString::number(min) : QString::number(min);
 }
 
 time_t Timer::CurrentTime()

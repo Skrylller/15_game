@@ -3,7 +3,9 @@ import QtQuick 2.0
 Rectangle {
     id: _timer;
 
-    readonly property int timerHeight: 60;
+    property int timerHeight: 60;
+    property string min: "";
+    property string sec: "";
 
     height: timerHeight;
     width: parent.width;
@@ -24,7 +26,7 @@ Rectangle {
             id: _minutesText;
             anchors.centerIn: _timer;
 
-            text: "00";
+            text: min;
             font{
                 pointSize: Math.min(_timer.width, _timer.height) / 100 * 32;
                 bold: true;
@@ -48,7 +50,7 @@ Rectangle {
             id: _secondsText;
             anchors.centerIn: _timer;
 
-            text: "00";
+            text: sec;
             font{
                 pointSize: Math.min(_timer.width, _timer.height) / 100 * 32;
                 bold: true;

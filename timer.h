@@ -3,32 +3,34 @@
 #include <QAbstractListModel>
 #include <QTime>
 #include <QTimer>
+#include "windows.h"
 
 class Timer : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(int minutes READ  GetTimeMinutes NOTIFY TimerUpdate)
-    Q_PROPERTY(int seconds READ GetTimeSeconds NOTIFY TimerUpdate)
+    Q_PROPERTY(QString minutes READ  GetTimeMinutes NOTIFY TimerUpdate)
+    Q_PROPERTY(QString seconds READ GetTimeSeconds NOTIFY TimerUpdate)
+
 
 public:
     Timer(QObject* parrent = nullptr);
 
     Timer(time_t startTime, QObject* parrent = nullptr);
 
-    bool IsActive();
-
-    int GetTimeSeconds();
-
-    int GetTimeMinutes();
-
-    QTimer *updateTimer;
-
-private:
     void SetActiveTimer(bool isActive);
 
+    bool IsActive();
+
+    QString GetTimeSeconds();
+
+    QString GetTimeMinutes();
+
+    QTimer *updateTimer = nullptr;
+
+private:
     time_t CurrentTime();
 
-    tm& GetTm();
+    time_t GetDifTime();
 
     time_t startTime = time(0);
     time_t currentTime = time(0);
@@ -40,7 +42,7 @@ signals:
 
 private slots:
 
-    void Update();
+    void slotUpdate();
 };
 
 #endif // TIMER_H
