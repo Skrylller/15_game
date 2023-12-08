@@ -1,11 +1,11 @@
 #include "gamecontroller.h"
 
-GameController::GameController(GameBoard* gameBoard, Timer* timer, QObject *parrent) : QObject(parrent)
+GameController::GameController(QObject *parrent) : QObject(parrent)
 {
-    this->gameBoard = gameBoard;
-    this->timer = timer;
+    gameBoard = new GameBoard(fieldSideSize, this);
+    timer = new Timer(this);
 
-    gameBoard->moveUpdateObjs.insert(gameBoard->moveUpdateObjs.begin(), this);
+    gameBoard->AddOnMove(this);
 }
 
 int GameController::GetMoveCount()
@@ -16,6 +16,21 @@ int GameController::GetMoveCount()
 void GameController::moveUpdate()
 {
     plusMove();
+}
+
+Timer *GameController::getTimer() const
+{
+    return timer;
+}
+
+QObject *GameController::getQObject()
+{
+    return this;
+}
+
+GameBoard *GameController::getGameBoard() const
+{
+    return gameBoard;
 }
 
 void GameController::plusMove()

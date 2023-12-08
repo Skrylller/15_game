@@ -1,9 +1,9 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
-#include "gameboard.h"
-#include "timer.h"
 #include <QQuickView>
 #include <QQmlContext>
+#include "gameboard.h"
+#include "timer.h"
 #include "gamecontroller.h"
 
 int main(int argc, char *argv[])
@@ -13,13 +13,11 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
 
-    GameBoard board;
-    Timer timer {};
-    GameController gameController {&board};
+    GameController gameController;
 
     qmlRegisterType<GameBoard>("Game", 1, 0, "GameBoardModel");
-    engine.rootContext()->setContextProperty("TimerModel", &timer);
-    engine.rootContext()->setContextProperty("GameController", &gameController);
+    engine.rootContext()->setContextProperty("TimerModel", gameController.getTimer());
+    engine.rootContext()->setContextProperty("GameController", gameController.getQObject());
 
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
@@ -29,7 +27,7 @@ int main(int argc, char *argv[])
     }, Qt::QueuedConnection);
     engine.load(url);
 
-    timer.SetActiveTimer(true);
+    gameController.getTimer()->SetActiveTimer(true);
 
     return app.exec();
 }

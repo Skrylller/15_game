@@ -1,7 +1,10 @@
 #ifndef GAMEBOARD_H
 #define GAMEBOARD_H
 #include <QAbstractListModel>
-# include <vector>
+#include <vector>
+#include <algorithm>
+#include <random>
+#include <cmath>
 #include "gamecontroller.h"
 #include "IMoveUpdate.h"
 
@@ -76,7 +79,7 @@ public:
     ///
     Q_INVOKABLE bool move(int index);
 
-    std::vector<IMoveUpdate> moveUpdateObjs;
+    void AddOnMove(IMoveUpdate* iMoveUpdate);
 
 private:
 
@@ -130,6 +133,8 @@ private:
     int animDirectionV = 0;
     int selectedCell;
     bool isAnimRun;
+
+    std::vector<IMoveUpdate*> moveUpdateObjs;
 
 signals:
 

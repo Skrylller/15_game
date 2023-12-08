@@ -1,7 +1,4 @@
 #include "gameboard.h"
-#include <algorithm>
-#include <random>
-#include <cmath>
 
 namespace
 {
@@ -203,9 +200,10 @@ bool GameBoard::move(const int index)
     IsAnimRun(true);
     SelectedCell(hiddenElementIterator->value);
 
-    for(size_t i = 0; i < moveUpdateObjs.size(); i++)
+    std::vector<IMoveUpdate*> hfhf = moveUpdateObjs;
+    for(size_t i = 0; i < moveUpdateObjs.size(); ++i)
     {
-        moveUpdateObjs[i].moveUpdate();
+        moveUpdateObjs[i]->moveUpdate();
     }
 
     emit MoveCell();
@@ -227,4 +225,9 @@ void GameBoard::CalcAnimDirection(const GameBoard::Position f, const GameBoard::
 
     if (f.second != s.second)
         setHorizontalAnimDirection((f.second - s.second) / abs(f.second - s.second));
+}
+
+void GameBoard::AddOnMove(IMoveUpdate *iMoveUpdate)
+{
+    moveUpdateObjs.insert(moveUpdateObjs.begin(), iMoveUpdate);
 }

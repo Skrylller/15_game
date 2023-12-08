@@ -43,7 +43,7 @@ Window {
 
                 Counter{
                     name: "Количество \nходов";
-                    counter: moveCount;
+                    counter: GameController.moveCount;
                 }
 
             }

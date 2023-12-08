@@ -38,5 +38,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     IMoveUpdate.h \
     gameboard.h \
-    gamecontroller.h \
-    timer.h
+    timer.h \
+    gamecontroller.h
