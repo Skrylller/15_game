@@ -2,8 +2,8 @@
 
 GameController::GameController(QObject *parrent) : QObject(parrent)
 {
-    gameBoard = new GameBoard(fieldSideSize, this);
     timer = new Timer(this);
+    gameBoard = new GameBoard(4, this);
 
     gameBoard->AddOnMove(this);
 }
@@ -37,5 +37,12 @@ void GameController::plusMove()
 {
     ++moveCount;
 
-    emit moveUpdate();
+    emit signalPlusMove();
+}
+
+void GameController::SetGameBoard(GameBoard* gameBoard)
+{
+    this->gameBoard = gameBoard;
+
+    gameBoard->AddOnMove(this);
 }

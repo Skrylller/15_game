@@ -1,13 +1,9 @@
 import QtQuick 2.0
-import Game 1.0;
 
 
 GridView {
     id: _root
-    model: GameBoardModel {
-
-    }
-
+    model: GameModel
     cellWidth: _root.width / _root.model.m_sideSize;
     cellHeight: _root.height / _root.model.m_sideSize;
 

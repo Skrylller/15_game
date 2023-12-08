@@ -10,7 +10,7 @@ class GameBoard;
 class GameController : public QObject, public IMoveUpdate
 {
     Q_OBJECT
-    Q_PROPERTY(int moveCount READ  GetMoveCount NOTIFY moveUpdate)
+    Q_PROPERTY(int moveCount READ  GetMoveCount NOTIFY signalPlusMove)
 public:
     GameController(QObject* parrent = nullptr);
 
@@ -36,6 +36,10 @@ private:
 signals:
 
     void signalPlusMove();
+
+private slots:
+
+    void SetGameBoard(GameBoard* gameBoard);
 
 };
 

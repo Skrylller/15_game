@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
 
     GameController gameController;
 
-    qmlRegisterType<GameBoard>("Game", 1, 0, "GameBoardModel");
+    engine.rootContext()->setContextProperty("GameModel", gameController.getGameBoard());
     engine.rootContext()->setContextProperty("TimerModel", gameController.getTimer());
     engine.rootContext()->setContextProperty("GameController", gameController.getQObject());
 
@@ -25,6 +25,7 @@ int main(int argc, char *argv[])
         if (!obj && url == objUrl)
             QCoreApplication::exit(-1);
     }, Qt::QueuedConnection);
+
     engine.load(url);
 
     gameController.getTimer()->SetActiveTimer(true);
