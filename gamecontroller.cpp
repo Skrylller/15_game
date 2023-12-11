@@ -6,6 +6,9 @@ GameController::GameController(QObject *parrent) : QObject(parrent)
     gameBoard = new GameBoard(4, this);
 
     gameBoard->AddOnMove(this);
+
+    moveCount = 0;
+    isGameComplete = false;
 }
 
 int GameController::GetMoveCount()
@@ -16,6 +19,9 @@ int GameController::GetMoveCount()
 void GameController::moveUpdate()
 {
     plusMove();
+    if(bool isComplete = gameBoard->CheckCompleteBoard()){
+        CompleteGame();
+    }
 }
 
 Timer *GameController::getTimer() const
@@ -26,6 +32,19 @@ Timer *GameController::getTimer() const
 QObject *GameController::getQObject()
 {
     return this;
+}
+
+bool GameController::GetGameComplete()
+{
+    return isGameComplete;
+}
+
+bool GameController::move(int index)
+{
+    if(isGameComplete)
+        return false;
+
+    return gameBoard->move(index);
 }
 
 GameBoard *GameController::getGameBoard() const
@@ -40,9 +59,24 @@ void GameController::plusMove()
     emit signalPlusMove();
 }
 
-void GameController::SetGameBoard(GameBoard* gameBoard)
+void GameController::CompleteGame()
 {
-    this->gameBoard = gameBoard;
+    timer->SetActiveTimer(false);
+    isGameComplete = true;
+    emit signalGameComplete();
+}
 
-    gameBoard->AddOnMove(this);
+void GameController::RestartLevel()
+{
+    timer->SetActiveTimer(true);
+    gameBoard->Shuffle();
+    moveCount = 0;
+    isGameComplete = false;
+    emit signalGameComplete();
+    emit signalPlusMove();
+}
+
+void GameController::slotRestart()
+{
+    RestartLevel();
 }

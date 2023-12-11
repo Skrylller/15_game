@@ -46,7 +46,7 @@ GameBoard::GameBoard(int sideSize, QObject* parrent) : QAbstractListModel(parren
 {
     m_cells.resize(m_cellNum);
     std::iota(m_cells.begin(), m_cells.end(), 1);
-    Shuffle();
+    //Shuffle();
 }
 
 int GameBoard::rowCount(const QModelIndex &parent) const
@@ -81,6 +81,7 @@ void GameBoard::Shuffle()
     {
         std::shuffle(m_cells.begin(), m_cells.end(), generator);
     } while (isBoardValid());
+    emit dataChanged(createIndex(0, 0), createIndex(m_cellNum, 0));
 }
 
 bool GameBoard::isPositionValid(const int cellIndex) const
@@ -200,7 +201,6 @@ bool GameBoard::move(const int index)
     IsAnimRun(true);
     SelectedCell(hiddenElementIterator->value);
 
-    std::vector<IMoveUpdate*> hfhf = moveUpdateObjs;
     for(size_t i = 0; i < moveUpdateObjs.size(); ++i)
     {
         moveUpdateObjs[i]->moveUpdate();
@@ -230,4 +230,17 @@ void GameBoard::CalcAnimDirection(const GameBoard::Position f, const GameBoard::
 void GameBoard::AddOnMove(IMoveUpdate *iMoveUpdate)
 {
     moveUpdateObjs.insert(moveUpdateObjs.begin(), iMoveUpdate);
+}
+
+bool GameBoard::CheckCompleteBoard()
+{
+    for(int i = 0; i < (int)m_cells.size() - 1; ++i){
+        if(i == (int)m_cells.size() - 4 && m_cells[i + 1].value == (int)m_cells.size() - 1 && m_cells[i + 2] == (int)m_cells.size() - 2){
+            return true;
+        }
+        else if(m_cells[i].value != m_cells[i + 1].value - 1){
+            return false;
+        }
+    }
+    return true;
 }

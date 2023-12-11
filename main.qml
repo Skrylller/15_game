@@ -1,5 +1,7 @@
 import QtQuick 2.12
 import QtQuick.Window 2.12
+import QtQuick.Window 2.2
+import QtQuick.Controls 2.12
 
 Window {
     id: _root
@@ -53,5 +55,10 @@ Window {
             anchors.fill: parent;
             anchors.rightMargin: infoPanelSize;
         }
+    }
+
+    GameCompleteMessage{
+        messageText: "Игра\nпройдена.";
+        buttonText: "Заново";
     }
 }

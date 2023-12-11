@@ -37,7 +37,7 @@ Rectangle {
             id: _timerRect
 
             height: counterHeight;
-            width: height;
+            width: counterHeight * 2;
 
             color: "steelblue";
 

@@ -15,11 +15,20 @@ void Timer::SetActiveTimer(bool isActive)
     this->isActive = isActive;
     currentTime = CurrentTime();
 
-    if(updateTimer == nullptr){
-        updateTimer = new QTimer(this);
+    if(isActive){
+        startTime = CurrentTime();
+        if(updateTimer == nullptr){
+            updateTimer = new QTimer(this);
+            connect(updateTimer, SIGNAL(timeout()), this, SLOT(slotUpdate()));
+        }
         updateTimer->start(500);
-        connect(updateTimer, SIGNAL(timeout()), this, SLOT(slotUpdate()));
     }
+
+    if(!isActive){
+        updateTimer->stop();
+    }
+
+    emit TimerUpdate();
 }
 
 bool Timer::IsActive()

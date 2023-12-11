@@ -77,16 +77,18 @@ public:
     /// \param index
     /// \return
     ///
-    Q_INVOKABLE bool move(int index);
+    bool move(int index);
 
     void AddOnMove(IMoveUpdate* iMoveUpdate);
 
-private:
+    bool CheckCompleteBoard();
 
     ///
     /// \brief Перемешивает клетки
     ///
     void Shuffle();
+
+private:
 
     ///
     /// \brief Проверяет входит ли индекс в размер контейнера клеток

@@ -11,6 +11,7 @@ class GameController : public QObject, public IMoveUpdate
 {
     Q_OBJECT
     Q_PROPERTY(int moveCount READ  GetMoveCount NOTIFY signalPlusMove)
+    Q_PROPERTY(bool gameComplete READ GetGameComplete NOTIFY signalGameComplete)
 public:
     GameController(QObject* parrent = nullptr);
 
@@ -24,22 +25,38 @@ public:
 
     QObject *getQObject();
 
+    bool GetGameComplete();
+
+    ///
+    /// \brief Пробует переместить клетку по заданному индексу на пустое место
+    /// \param index
+    /// \return
+    ///
+    Q_INVOKABLE bool move(int index);
+
 private:
     GameBoard* gameBoard = nullptr;
     Timer* timer;
+
+    bool isGameComplete;
 
     int fieldSideSize = 4;
     int moveCount = 0;
 
     void plusMove();
 
+    void CompleteGame();
+
+    void RestartLevel();
+
 signals:
 
+    void signalGameComplete();
     void signalPlusMove();
 
-private slots:
+public slots:
 
-    void SetGameBoard(GameBoard* gameBoard);
+    void slotRestart();
 
 };
 

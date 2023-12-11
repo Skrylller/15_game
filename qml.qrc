@@ -5,5 +5,6 @@
         <file>GameBoard.qml</file>
         <file>TimePanel.qml</file>
         <file>Counter.qml</file>
+        <file>GameCompleteMessage.qml</file>
     </qresource>
 </RCC>

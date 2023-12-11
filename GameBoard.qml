@@ -22,7 +22,7 @@ GridView {
         MouseArea {
             anchors.fill: parent;
             onClicked: {
-                _root.model.move(index);
+                GameController.move(index);
             }
         }
 
