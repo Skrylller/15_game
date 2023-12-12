@@ -4,6 +4,7 @@ GameController::GameController(QObject *parrent) : QObject(parrent)
 {
     timer = new Timer(this);
     gameBoard = new GameBoard(4, this);
+    dataController = new DataController(this);
 
     gameBoard->AddOnMove(this);
 
@@ -69,6 +70,7 @@ void GameController::CompleteGame()
 void GameController::RestartLevel()
 {
     timer->SetActiveTimer(true);
+    gameBoard->SelectedCell(-1);
     gameBoard->Shuffle();
     moveCount = 0;
     isGameComplete = false;

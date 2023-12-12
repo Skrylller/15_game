@@ -4,6 +4,7 @@
 #include "IMoveUpdate.h"
 #include "gameboard.h"
 #include "timer.h"
+#include "datacontroller.h"
 
 class GameBoard;
 
@@ -37,6 +38,7 @@ public:
 private:
     GameBoard* gameBoard = nullptr;
     Timer* timer;
+    DataController* dataController;
 
     bool isGameComplete;
 
